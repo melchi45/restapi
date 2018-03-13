@@ -36,14 +36,16 @@ file(GLOB HDR_FILES ${PROJECT_SOURCE_DIR}/src/*${HDR_EXT_PATTERN} ${PROJECT_SOUR
 source_group("Source Files" FILES ${SRC_FILES})
 source_group("Header Files" FILES ${HDR_FILES})
 
-include_directories( ${ADALINE_EXAMPLE1} PRIVATE ${PROJECT_SOURCE_DIR}/src )
+include_directories( ${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src )
+
+add_library(${PROJECT_NAME} ${SRC_FILES} ${HDR_FILES})
 
 # build target
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/${ADALINE_EXAMPLE1}/${ADALINE_EXAMPLE1}.cpp ${SRC_FILES} ${HDR_FILES})
+#add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/${ADALINE_EXAMPLE1}/${ADALINE_EXAMPLE1}.cpp ${SRC_FILES} ${HDR_FILES})
 
-add_custom_command (
-    TARGET ${ADALINE_EXAMPLE1}
-    POST_BUILD
-    COMMAND ${ADALINE_EXAMPLE1}
-    COMMENT "Execute ${ADALINE_EXAMPLE1}"
-)
+#add_custom_command (
+#    TARGET ${ADALINE_EXAMPLE1}
+#    POST_BUILD
+#    COMMAND ${ADALINE_EXAMPLE1}
+#    COMMENT "Execute ${ADALINE_EXAMPLE1}"
+#)
