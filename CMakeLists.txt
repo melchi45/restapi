@@ -10,11 +10,17 @@ if ( CMAKE_COMPILER_IS_GNUCXX )
    set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive" )
 endif ()
 
+# set where to find additional cmake modules if any
+# comment it out if not required
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+message ( "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
+
 # set compiler support for C++11 standard
 option(USE_CXX11_STD "Product should be build with C++11 compiler option enabled" ON)
 
 if(USE_CXX11_STD)
     set(CMAKE_CXX_STANDARD 11)
+	set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
 if(MSVC)
@@ -22,6 +28,14 @@ if(MSVC)
 else()
     # GCC or Clang
 endif()
+
+find_package ( CPR REQUIRED )
+if ( CPR_FOUND )
+message ( STATUS "CPR_INCLUDE_DIRS = ${CPR_INCLUDE_DIRS}" )
+message ( STATUS "CPR_LIBRARIES = ${CPR_LIBRARIES}" )
+include_directories ( ${CPR_INCLUDE_DIRS} )
+endif ( CPR_FOUND )
+
 
 # use standard file endings - rename to cxx if needed
 set(CXX_SRC_EXT_PATTERN ".cpp")
@@ -39,6 +53,12 @@ source_group("Header Files" FILES ${HDR_FILES})
 include_directories( ${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src )
 
 add_library(${PROJECT_NAME} ${SRC_FILES} ${HDR_FILES})
+
+#install(TARGETS ${PROJECT_NAME}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#    ARCHIVE DESTINATION lib
+#)
 
 # build target
 #add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/${ADALINE_EXAMPLE1}/${ADALINE_EXAMPLE1}.cpp ${SRC_FILES} ${HDR_FILES})
