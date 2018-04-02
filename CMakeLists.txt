@@ -29,6 +29,13 @@ else()
     # GCC or Clang
 endif()
 
+set ( THREADS_USE_PTHREADS_WIN32 TRUE )
+find_package(Threads REQUIRED)
+
+message ( "THREADS_PTHREADS_INCLUDE_DIR = ${THREADS_PTHREADS_INCLUDE_DIR}" )
+message ( "THREADS_PTHREADS_WIN32_LIBRARY = ${THREADS_PTHREADS_WIN32_LIBRARY}" )
+message ( "CMAKE_THREAD_LIBS_INIT = ${CMAKE_THREAD_LIBS_INIT}" )
+
 find_package ( CPR REQUIRED )
 if ( CPR_FOUND )
 message ( STATUS "CPR_INCLUDE_DIRS = ${CPR_INCLUDE_DIRS}" )
@@ -36,6 +43,12 @@ message ( STATUS "CPR_LIBRARIES = ${CPR_LIBRARIES}" )
 include_directories ( ${CPR_INCLUDE_DIRS} )
 endif ( CPR_FOUND )
 
+find_package(JSONCPP REQUIRED)
+if ( JSONCPP_FOUND )
+message ( STATUS "JSONCPP_INCLUDE_DIRS = ${JSONCPP_INCLUDE_DIRS}" )
+message ( STATUS "JSONCPP_LIBRARIES = ${JSONCPP_LIBRARIES}" )
+include_directories ( ${CPR_INCLUDE_DIRS} )
+endif ( JSONCPP_FOUND )
 
 # use standard file endings - rename to cxx if needed
 set(CXX_SRC_EXT_PATTERN ".cpp")
@@ -50,9 +63,10 @@ file(GLOB HDR_FILES ${PROJECT_SOURCE_DIR}/src/*${HDR_EXT_PATTERN} ${PROJECT_SOUR
 source_group("Source Files" FILES ${SRC_FILES})
 source_group("Header Files" FILES ${HDR_FILES})
 
-include_directories( ${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src )
-
 add_library(${PROJECT_NAME} ${SRC_FILES} ${HDR_FILES})
+
+include_directories( ${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src )
+target_link_libraries(${PROJECT_NAME} PRIVATE ${JSONCPP_LIBRARIES})
 
 #install(TARGETS ${PROJECT_NAME}
 #    RUNTIME DESTINATION bin

@@ -30,7 +30,6 @@
  *******************************************************************************/
 
 #include "Put.h"
-#include "log/log_utils.h"
 
 namespace rest {
 
@@ -55,7 +54,7 @@ Put::~Put() {
 }
 
 
-bool Put::setResponse(const cpr::Response& r) throw (RestException, PixcamException)
+bool Put::setResponse(const cpr::Response& r) throw (RestException, RestExceptionExt)
 {
 	bool parsingRet = ResponseBase::setResponse(r);
 

@@ -30,9 +30,7 @@
  *******************************************************************************/
 
 #include "ResponseBase.h"
-#include "PixcamException.h"
-
-#include "log/log_utils.h"
+#include "RestExceptionExt.h"
 
 namespace rest {
 
@@ -53,7 +51,7 @@ ResponseBase* ResponseBase::getInstance()
 	return ResponseBase::m_Instance;
 }
 
-bool ResponseBase::setResponse(const cpr::Response& res) throw (RestException, PixcamException)
+bool ResponseBase::setResponse(const cpr::Response& res) throw (RestException, RestExceptionExt)
 {
 	bool parsingRet = false;
 	m_response = res;
@@ -85,7 +83,7 @@ bool ResponseBase::setResponse(const cpr::Response& res) throw (RestException, P
 	    	log_error("Result Code: %d", m_root[vHeader].get(vResultCode,"").asInt());
 	    	log_error("Result Message: %s", m_root[vHeader].get(vResultMessage,"").asString().c_str());
 
-			throw (PixcamException(m_response.status_code,
+			throw (RestExceptionExt(m_response.status_code,
 					m_root[vHeader].get(vResultCode, "").asInt(),
 					m_root[vHeader].get(vResultMessage, "").asString()));
 	    }

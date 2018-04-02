@@ -48,20 +48,24 @@
 #include <assert.h>     /* assert */
 #include <stdio.h>
 #include <stdlib.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <errno.h>
 #include <pthread.h>
 
 #include "Thread.h"
-#include "log/log_utils.h"
+#include "log_utils.h"
 
 //#define DBG_THREAD
 
 Thread::Thread()
 : m_stoprequested(false)
 , m_running(false)
-, m_thread(0)
 , title("In worker thread: Thread")
+#if (!(defined(_WIN32) || defined(_WIN64)))
+, m_thread(0)
+#endif
 {
 	if (pthread_mutex_init(&m_mutex, NULL) != 0) {
 		log_info("mutex init failed");
@@ -116,7 +120,9 @@ int Thread::stop() // Note 2
 		log_error("can't create thread :[%s]", strerror(err));
 		return -1;
 	}
+#if (!(defined(_WIN32) || defined(_WIN64)))
 	display_current_attr();
+#endif
 
 	return 0;
 }
@@ -130,7 +136,9 @@ bool Thread::is_running()
 // for the pthread_create call
 void* Thread::start_thread(void *obj)
 {
+#if (!(defined(_WIN32) || defined(_WIN64)))
 	reinterpret_cast<Thread*>(obj)->display_current_attr();
+#endif
 	//All we do here is call the do_work() function
 	reinterpret_cast<Thread*>(obj)->do_work();
 
@@ -202,7 +210,7 @@ int Thread::set_pthread_attr()
 		return -1;
 	}
 
-
+#if (!(defined(_WIN32) || defined(_WIN64)))
 	guard_size = 4096 * 4;
 	err = pthread_attr_setguardsize(&m_thread_attr, guard_size);
 	if (err != 0) {
@@ -225,7 +233,7 @@ int Thread::set_pthread_attr()
 		log_error("can't pthread_attr_setstack :[%s]", strerror(err));
 		return -1;
 	}
-
+#endif
 	return 0;
 }
 
@@ -342,6 +350,7 @@ void Thread::display_pthread_attr(pthread_attr_t *attr)
 	log_debug("%24s = %d", "Scheduling priority", sched_param.sched_priority);
 #endif
 
+#if (!(defined(_WIN32) || defined(_WIN64)))
     err = pthread_attr_getguardsize(attr, &guard_size);
 	if (err != 0) {
 		log_error("can't pthread_attr_getguardsize :[%s]", strerror(err));
@@ -361,8 +370,10 @@ void Thread::display_pthread_attr(pthread_attr_t *attr)
 	log_debug("%24s = %p", "Stack address", stack_addr);
 	log_debug("%24s = %#x", "Stack size", stack_size);
 #endif
+#endif
 }
 
+#if (!(defined(_WIN32) || defined(_WIN64)))
 void Thread::display_current_attr()
 {
     int err;
@@ -376,7 +387,8 @@ void Thread::display_current_attr()
 		return;
 	}
 
-    puts(title);
+	puts(title);
     display_pthread_attr(&attr);
     puts("");
 }
+#endif

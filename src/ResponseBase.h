@@ -34,9 +34,11 @@
 
 #include <json/json.h>
 #include <cpr/cpr.h>
-#include "event/EventDispatcher.h"
+//#include "event/EventDispatcher.h"
 #include "RestException.h"
-#include "PixcamException.h"
+#include "RestExceptionExt.h"
+
+#include "log_utils.h"
 
 namespace rest {
 
@@ -48,7 +50,7 @@ const char * const vResultMessage			= "resultMessage";
 /*
  *
  */
-class ResponseBase : public event::EventDispatcher {
+class ResponseBase/* : public event::EventDispatcher */{
 public:
 	ResponseBase();
 	virtual ~ResponseBase();
@@ -62,7 +64,7 @@ protected:
 	static ResponseBase* m_Instance;
 
 public:
-	virtual bool setResponse(const cpr::Response& res) throw (RestException, PixcamException);
+	virtual bool setResponse(const cpr::Response& res) throw (RestException, RestExceptionExt);
 	int getResponseStatusCode();
 	int getResultCode();
 	std::string getResultMessage();

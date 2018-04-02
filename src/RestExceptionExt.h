@@ -23,40 +23,45 @@
  *  $HeadURL$
  *
  *  History 
- *    Put.h
+ *    RestExceptionExt.h
  *
- *  Created on: Nov 10, 2016
+ *  Created on: Nov 15, 2016
  *      Author: Youngho Kim
  *******************************************************************************/
 
-#ifndef REST_PUT_H_
-#define REST_PUT_H_
+#ifndef REST_EXCEPTION_EXT_H_
+#define REST_EXCEPTION_EXT_H_
 
-#include "RestBase.h"
-#include "ResponseBase.h"
+#include "RestException.h"
 
 namespace rest {
 
 /*
  *
  */
-class Put : public RestBase, public ResponseBase {
+class RestExceptionExt : public RestException {
 public:
-	Put(cpr::Url url, cpr::Header header, cpr::Body body);
-	Put(cpr::Url url, cpr::Header header);
-	virtual ~Put();
-protected:
-	cpr::Body m_body;
-
-public:
-	void setBody(cpr::Body body) { m_body = body; }
-	static int status_callback_ref(int& status_code, const cpr::Response& r);
-	virtual bool setResponse(const cpr::Response& r) throw (RestException, RestExceptionExt);
+	RestExceptionExt(int status_code, int resultCode, std::string resultMessage);
+	virtual ~RestExceptionExt();
 
 protected:
-    virtual void* run(void);
+	int m_resultCode;
+	std::string m_resultMessage;
+
+public:
+	int ResultCode() { return m_resultCode; }
+	std::string ResultMessage() { return m_resultMessage; }
+
+	virtual const char* what() const throw()
+	{
+		std::ostringstream stringStream;
+		stringStream << "\nStatus Code: " << m_StatusCode << ",\nResult Code: " << m_resultCode << "\nResult Message: " << m_resultMessage;
+		std::string copyOfStr = stringStream.str();
+
+		return copyOfStr.c_str();
+	}
 };
 
 } /* namespace rest */ //end of rest
 
-#endif /* REST_PUT_H_ */
+#endif /* REST_EXCEPTION_EXT_H_ */

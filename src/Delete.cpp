@@ -31,8 +31,6 @@
 
 #include "Delete.h"
 
-#include "log/log_utils.h"
-
 namespace rest {
 
 Delete::Delete(cpr::Url url, cpr::Header header, cpr::Body body)
@@ -55,7 +53,7 @@ Delete::~Delete() {
 }
 
 
-bool Delete::setResponse(const cpr::Response& r) throw (RestException, PixcamException)
+bool Delete::setResponse(const cpr::Response& r) throw (RestException, RestExceptionExt)
 {
 	bool parsingRet = ResponseBase::setResponse(r);
 
@@ -80,7 +78,7 @@ cpr::Response Delete::status_callback_ref(int& status_code, const cpr::Response&
    // dispatchEvent(*this);
 
 		//this->dispatchEvent();
-	} catch (rest::PixcamException& e) {
+	} catch (rest::RestExceptionExt& e) {
 		log_error("%s", e.what());
 	} catch (std::exception& e) {
 
@@ -111,7 +109,7 @@ void* Delete::run(void)
 	return NULL;
 }
 
-int Delete::send() throw (RestException, PixcamException)
+int Delete::send() throw (RestException, RestExceptionExt)
 {
 	int rtn = RestBase::send();
 
@@ -119,7 +117,7 @@ int Delete::send() throw (RestException, PixcamException)
 		throw (RestException(getResponseStatusCode()));
 
 	if(getResultCode() != 0 )
-		throw (PixcamException(getResponseStatusCode(), getResultCode(), getResultMessage()));
+		throw (RestExceptionExt(getResponseStatusCode(), getResultCode(), getResultMessage()));
 
 	return rtn;
 }

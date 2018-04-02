@@ -34,12 +34,12 @@
 
 #include <cpr/cpr.h>
 
-#include "task/Thread.h"
-#include "event/EventDispatcher.h"
-#include "event/Listener.h"
+#include "Thread.h"
 
 #include "RestException.h"
-#include "PixcamException.h"
+#include "RestExceptionExt.h"
+
+#include "log_utils.h"
 
 namespace rest {
 
@@ -65,7 +65,7 @@ public:
     void setHeader(cpr::Header header) { m_header = header; }
     void setBaseURL(std::string base_url) { m_base_url = base_url; }
     void setUri(std::string uri);
-    virtual int send() throw (RestException, PixcamException);
+    virtual int send() throw (RestException, RestExceptionExt);
 };
 
 } /* namespace rest */ //end of rest

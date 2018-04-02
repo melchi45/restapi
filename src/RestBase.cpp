@@ -28,11 +28,17 @@
  *  Created on: Nov 7, 2016
  *      Author: Youngho Kim
  *******************************************************************************/
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <json/json.h>
 
 #include "RestBase.h"
-#include "log/log_utils.h"
+#include "log_utils.h"
+
+#if (defined(_WIN32) || defined(_WIN64))
+#include <windows.h>
+#endif
 
 namespace rest {
 
@@ -77,12 +83,16 @@ int RestBase::setAuthorizationToken(std::string token)
 	return 0;
 }
 
-int RestBase::send() throw (RestException, PixcamException)
+int RestBase::send() throw (RestException, RestExceptionExt)
 {
     log_debug("start run");
 
 	if (start() == 0) {
+#if (!(defined(_WIN32) || defined(_WIN64)))
 		usleep(1000);
+#else
+		Sleep(1000);
+#endif
 
 		if (this->is_running()) {
 			if (stop() < 0) {

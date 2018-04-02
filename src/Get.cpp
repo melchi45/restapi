@@ -30,7 +30,6 @@
  *******************************************************************************/
 
 #include "Get.h"
-#include "log/log_utils.h"
 
 namespace rest {
 
@@ -46,7 +45,7 @@ Get::~Get() {
 }
 
 
-bool Get::setResponse(const cpr::Response& res) throw (RestException, PixcamException)
+bool Get::setResponse(const cpr::Response& res) throw (RestException, RestExceptionExt)
 {
 	bool parsingRet = ResponseBase::setResponse(res);
 
@@ -69,7 +68,7 @@ cpr::Response Get::status_callback_ref(int& status_code, const cpr::Response& re
 //    trigger();
 //    pause();
    // dispatchEvent(*this);
-	} catch (rest::PixcamException& e) {
+	} catch (rest::RestExceptionExt& e) {
 		log_error("%s", e.what());
 	} catch (std::exception& e) {
 
@@ -99,7 +98,7 @@ void* Get::run(void)
 	return NULL;
 }
 
-int Get::send() throw (RestException, PixcamException)
+int Get::send() throw (RestException, RestExceptionExt)
 {
 	int rtn = RestBase::send();
 
@@ -107,7 +106,7 @@ int Get::send() throw (RestException, PixcamException)
 		throw (RestException(getResponseStatusCode()));
 
 	if(getResultCode() != 0 )
-		throw (PixcamException(getResponseStatusCode(), getResultCode(), getResultMessage()));
+		throw (RestExceptionExt(getResponseStatusCode(), getResultCode(), getResultMessage()));
 
 	return rtn;
 }

@@ -47,8 +47,8 @@ public:
 
 public:
 	static cpr::Response status_callback_ref(int& status_code, const cpr::Response& res);
-	virtual bool setResponse(const cpr::Response& res) throw (RestException, PixcamException);
-	int send() throw (RestException, PixcamException);
+	virtual bool setResponse(const cpr::Response& res) throw (RestException, RestExceptionExt);
+	int send() throw (RestException, RestExceptionExt);
 
 protected:
     virtual void* run(void);

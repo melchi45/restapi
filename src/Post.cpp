@@ -29,13 +29,13 @@
  *      Author: Youngho Kim
  *******************************************************************************/
 #include <functional>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 #include "Post.h"
 #include "RestBase.h"
 #include "ResponseBase.h"
-
-#include "log/log_utils.h"
 
 namespace rest {
 
@@ -59,7 +59,7 @@ Post::~Post() {
 	// TODO Auto-generated destructor stub
 }
 
-bool Post::setResponse(const cpr::Response& r) throw (RestException, PixcamException)
+bool Post::setResponse(const cpr::Response& r) throw (RestException, RestExceptionExt)
 {
 	bool parsingRet = ResponseBase::setResponse(r);
 
@@ -84,7 +84,7 @@ cpr::Response Post::status_callback_ref(int& status_code, const cpr::Response& r
    // dispatchEvent(*this);
 
 		//this->dispatchEvent();
-	} catch (rest::PixcamException& e) {
+	} catch (rest::RestExceptionExt& e) {
 		log_error("%s", e.what());
 	} catch (std::exception& e) {
 
@@ -115,7 +115,7 @@ void* Post::run(void)
 	return NULL;
 }
 
-int Post::send() throw (RestException, PixcamException)
+int Post::send() throw (RestException, RestExceptionExt)
 {
 	int rtn = RestBase::send();
 
@@ -123,7 +123,7 @@ int Post::send() throw (RestException, PixcamException)
 		throw (RestException(getResponseStatusCode()));
 
 	if(getResultCode() != 0 )
-		throw (PixcamException(getResponseStatusCode(), getResultCode(), getResultMessage()));
+		throw (RestExceptionExt(getResponseStatusCode(), getResultCode(), getResultMessage()));
 
 	return rtn;
 }

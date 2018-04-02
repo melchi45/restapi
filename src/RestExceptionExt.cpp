@@ -23,40 +23,27 @@
  *  $HeadURL$
  *
  *  History 
- *    Put.h
+ *    RestExceptionExt.cpp
  *
- *  Created on: Nov 10, 2016
+ *  Created on: Nov 15, 2016
  *      Author: Youngho Kim
  *******************************************************************************/
 
-#ifndef REST_PUT_H_
-#define REST_PUT_H_
-
-#include "RestBase.h"
-#include "ResponseBase.h"
+#include "RestExceptionExt.h"
 
 namespace rest {
 
-/*
- *
- */
-class Put : public RestBase, public ResponseBase {
-public:
-	Put(cpr::Url url, cpr::Header header, cpr::Body body);
-	Put(cpr::Url url, cpr::Header header);
-	virtual ~Put();
-protected:
-	cpr::Body m_body;
+RestExceptionExt::RestExceptionExt(int status_code, int resultCode, std::string resultMessage)
+: RestException(status_code)
+, m_resultCode(resultCode)
+, m_resultMessage(resultMessage)
+{
+	// TODO Auto-generated constructor stub
 
-public:
-	void setBody(cpr::Body body) { m_body = body; }
-	static int status_callback_ref(int& status_code, const cpr::Response& r);
-	virtual bool setResponse(const cpr::Response& r) throw (RestException, RestExceptionExt);
+}
 
-protected:
-    virtual void* run(void);
-};
+RestExceptionExt::~RestExceptionExt() {
+	// TODO Auto-generated destructor stub
+}
 
 } /* namespace rest */ //end of rest
-
-#endif /* REST_PUT_H_ */

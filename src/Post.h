@@ -51,8 +51,8 @@ protected:
 public:
 	void setBody(cpr::Body body) { m_body = body; }
 	static cpr::Response status_callback_ref(int& status_code, const cpr::Response& r);
-	virtual bool setResponse(const cpr::Response& r) throw (RestException, PixcamException);
-    virtual int send() throw (RestException, PixcamException);
+	virtual bool setResponse(const cpr::Response& r) throw (RestException, RestExceptionExt);
+    virtual int send() throw (RestException, RestExceptionExt);
 
 protected:
     virtual void* run(void);
