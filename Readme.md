@@ -1,5 +1,12 @@
-# Application Test
+# RESTful API for c++
 
+## dependency
+this library needs curl and cpr library for rest application interface.
+
+git module init
+git submodule update
+
+## Application Test
 ```
 #ifndef _APPLOGIN_H_
 #define _APPLOGIN_H_
