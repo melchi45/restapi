@@ -31,80 +31,47 @@
 *  $Id:
 *  $HeadURL:
 *******************************************************************************/
-#ifndef _MSC_VER
-#include <unistd.h>
-#endif
-#include <json/json.h>
+#include "TestGetMethod.h"
 
-#include "RestBase.h"
 #include "log_utils.h"
-
-#if (defined(_WIN32) || defined(_WIN64))
-#include <windows.h>
-#endif
 
 namespace rest {
 
-RestBase::RestBase(cpr::Url url, cpr::Header header)
-: m_url(url)
-, m_header(header)
-//, m_status_code(0)
+const char * const vContent		= "content";
+const char * const vTitle		= "title";
+
+TestGetMethod::TestGetMethod()
+: Get(cpr::Url{"http://echo.jsontest.com/title/ipsum/content/blah"},
+	  cpr::Header{{"AuthorizationToken",""}})
 {
 	// TODO Auto-generated constructor stub
-//	addListener(this);
+
 }
 
-RestBase::~RestBase() {
+TestGetMethod::~TestGetMethod() {
 	// TODO Auto-generated destructor stub
-//	removeListener(this);
 }
 
-void RestBase::setUri(std::string uri)
+const char* TestGetMethod::getContent()
 {
-	m_url = cpr::Url(m_base_url + "/" + uri);
+	return m_root[vData].get(vContent,0).asString().c_str();
 }
 
-int RestBase::setAuthorizationToken(std::string token)
+const char* TestGetMethod::getTitle()
 {
-	Json::Reader reader;
-	Json::FastWriter fastWriter;
-	Json::Value root;
-//	bool parsingRet;
-
-	std::map<std::string, std::string>::iterator it = m_header.begin();
-	for(; it != m_header.end(); it++) {
-		if(it->first.compare("AuthorizationToken") == 0) {
-			it->second = token;
-		}
-	}
-
-	it = m_header.begin();
-	for(; it != m_header.end(); it++) {
-		log_debug ("Headers : \"%s\" : \"%s\"", it->first.c_str(), it->second.c_str());
-	}
-
-	return 0;
+	return m_root[vData].get(vTitle, 0).asString().c_str();
 }
 
-int RestBase::send() throw (RestException, RestExceptionExt)
+bool TestGetMethod::setResponse(const cpr::Response& res) throw (RestException, RestExceptionExt)
 {
-    log_debug("start run");
+	bool parsingRet = Get::setResponse(res);
 
-	if (start() == 0) {
-#if (!(defined(_WIN32) || !defined(_WIN64)))
-		usleep(1000);
-#else
-		Sleep(1000);
-#endif
+    if(parsingRet) {
+		log_debug("content: %s", m_root[vData].get(vContent,"").asString().c_str());
+    	log_debug("title: %s", m_root[vData].get(vTitle,"").asString().c_str());
+    }
 
-		if (this->is_running()) {
-			if (stop() < 0) {
-				log_error("fail to stop RestBase::send");
-			}
-		}
-	}
-
-	return 0;
+    return parsingRet;
 }
 
 } /* namespace rest */ //end of rest

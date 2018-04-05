@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 set ( PROJECT_NAME restapi )
+set ( TEST_APPLICATION test_application )
 
 project( ${PROJECT_NAME} )
 set ( ${PROJECT_NAME}_HOME ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -65,8 +66,19 @@ source_group("Header Files" FILES ${HDR_FILES})
 
 add_library(${PROJECT_NAME} ${SRC_FILES} ${HDR_FILES})
 
-include_directories( ${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src )
-target_link_libraries(${PROJECT_NAME} PRIVATE ${JSONCPP_LIBRARIES})
+target_include_directories( ${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src )
+#target_link_libraries(${PROJECT_NAME} PRIVATE ${JSONCPP_LIBRARIES})
+
+# get all *.cpp files from src to build target
+file(GLOB TEST_APPLICATION_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*${C_SRC_EXT_PATTERN} ${PROJECT_SOURCE_DIR}/test/*${CXX_SRC_EXT_PATTERN})
+file(GLOB TEST_APPLICATION_HDR_FILES ${PROJECT_SOURCE_DIR}/test/*${HDR_EXT_PATTERN} ${PROJECT_SOURCE_DIR}/test/*${HXX_EXT_PATTERN})
+# makes source and header files group
+source_group("Source Files" FILES ${TEST_APPLICATION_SRC_FILES})
+source_group("Header Files" FILES ${TEST_APPLICATION_HDR_FILES})
+
+add_executable(${TEST_APPLICATION} ${TEST_APPLICATION_SRC_FILES} ${TEST_APPLICATION_HDR_FILES})
+target_include_directories( ${TEST_APPLICATION} PRIVATE ${PROJECT_SOURCE_DIR}/src )
+target_link_libraries(${TEST_APPLICATION} ${PROJECT_NAME} ${CPR_LIBRARIES} ${JSONCPP_LIBRARIES} ${THREADS_PTHREADS_WIN32_LIBRARY})
 
 #install(TARGETS ${PROJECT_NAME}
 #    RUNTIME DESTINATION bin
