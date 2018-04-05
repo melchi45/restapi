@@ -51,8 +51,8 @@ bool Get::setResponse(const cpr::Response& res) throw (RestException, RestExcept
 {
 	bool parsingRet = ResponseBase::setResponse(res);
 
-//    log_info("Response Code: %d", r.status_code);
-//    log_info("Response: %s", r.text.c_str());
+    //log_info("Response Code: %d", res.status_code);
+    //log_info("Response: %s", res.text.c_str());
 
     if(this->is_running()) {
 //    	resume();
@@ -70,7 +70,7 @@ cpr::Response Get::status_callback_ref(int& status_code, const cpr::Response& re
 //    trigger();
 //    pause();
    // dispatchEvent(*this);
-	} catch (rest::RestExceptionExt& e) {
+	} catch (rest::RestException& e) {
 		log_error("%s", e.what());
 	} catch (std::exception& e) {
 
@@ -81,22 +81,23 @@ cpr::Response Get::status_callback_ref(int& status_code, const cpr::Response& re
 
 void* Get::run(void)
 {
-	log_info("Get::run");
+	if (!this->is_running()) {
+		log_debug("Get::run");
 
-	int m_status_code = 0;
-	auto callback = std::function<cpr::Response(cpr::Response)>(std::bind(Get::status_callback_ref,
+		int m_status_code = 0;
+		auto callback = std::function<cpr::Response(cpr::Response)>(std::bind(Get::status_callback_ref,
 			std::ref(m_status_code),
 			std::placeholders::_1));
 
-	log_debug("url: %s", m_url.c_str());
-	std::map<std::string, std::string>::iterator it = m_header.begin();
-	for(; it != m_header.end(); it++) {
-		log_debug ("Headers : \"%s\" : \"%s\"", it->first.c_str(), it->second.c_str());
+		log_debug("url: %s", m_url.c_str());
+		std::map<std::string, std::string>::iterator it = m_header.begin();
+		for (; it != m_header.end(); it++) {
+			log_debug("Headers : \"%s\" : \"%s\"", it->first.c_str(), it->second.c_str());
+		}
+
+		auto future = cpr::GetCallback(callback, m_url, m_header, cpr::Timeout{ 1000 });
+		m_response = future.get();
 	}
-
-	auto future = cpr::GetCallback(callback, m_url, m_header, cpr::Timeout{1000});
-	m_response = future.get();
-
 	return NULL;
 }
 
@@ -106,9 +107,6 @@ int Get::send() throw (RestException, RestExceptionExt)
 
 	if(getResponseStatusCode() != 200)
 		throw (RestException(getResponseStatusCode()));
-
-	if(getResultCode() != 0 )
-		throw (RestExceptionExt(getResponseStatusCode(), getResultCode(), getResultMessage()));
 
 	return rtn;
 }

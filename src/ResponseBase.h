@@ -44,10 +44,10 @@
 
 namespace rest {
 
-const char * const vHeader     				= "header";
-const char * const vData     				= "data";
-const char * const vResultCode				= "resultCode";
-const char * const vResultMessage			= "resultMessage";
+//const char * const vHeader     				= "header";
+//const char * const vData     				= "data";
+//const char * const vResultCode				= "resultCode";
+//const char * const vResultMessage			= "resultMessage";
 
 /*
  *
@@ -68,8 +68,6 @@ protected:
 public:
 	virtual bool setResponse(const cpr::Response& res) throw (RestException, RestExceptionExt);
 	int getResponseStatusCode();
-	int getResultCode();
-	std::string getResultMessage();
 
 	static ResponseBase* getInstance();
 };

@@ -54,12 +54,12 @@ TestGetMethod::~TestGetMethod() {
 
 const char* TestGetMethod::getContent()
 {
-	return m_root[vData].get(vContent,0).asString().c_str();
+	return m_root.get(vContent, "UTF-8").asString().c_str();
 }
 
 const char* TestGetMethod::getTitle()
 {
-	return m_root[vData].get(vTitle, 0).asString().c_str();
+	return m_root.get(vTitle, "UTF-8").asString().c_str();
 }
 
 bool TestGetMethod::setResponse(const cpr::Response& res) throw (RestException, RestExceptionExt)
@@ -67,9 +67,13 @@ bool TestGetMethod::setResponse(const cpr::Response& res) throw (RestException, 
 	bool parsingRet = Get::setResponse(res);
 
     if(parsingRet) {
-		log_debug("content: %s", m_root[vData].get(vContent,"").asString().c_str());
-    	log_debug("title: %s", m_root[vData].get(vTitle,"").asString().c_str());
+		log_debug("content: %s", m_root.get(vContent,"UTF-8").asString().c_str());
+    	log_debug("title: %s", m_root.get(vTitle,"UTF-8").asString().c_str());
     }
+
+	if (m_root.get(vContent, "UTF-8").asString().c_str() != NULL)
+		throw (RestExceptionExt(getResponseStatusCode(), -1, std::string("Error Message")));
+
 
     return parsingRet;
 }

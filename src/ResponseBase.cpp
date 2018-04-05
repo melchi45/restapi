@@ -76,19 +76,6 @@ bool ResponseBase::setResponse(const cpr::Response& res) throw (RestException, R
 			log_error("Failed to parse Json : %s", reader.getFormattedErrorMessages().c_str());
 			return parsingRet;
 		}
-
-	    if(getResultCode() != 0) {
-	    	// Get the value of the member of root named 'encoding', return 'UTF-8' if there is no
-	    	// such member.
-	    	std::string encoding = m_root.get("encoding", "UTF-8" ).asString();
-
-	    	log_error("Result Code: %d", m_root[vHeader].get(vResultCode,"").asInt());
-	    	log_error("Result Message: %s", m_root[vHeader].get(vResultMessage,"").asString().c_str());
-
-			throw (RestExceptionExt(m_response.status_code,
-					m_root[vHeader].get(vResultCode, "").asInt(),
-					m_root[vHeader].get(vResultMessage, "").asString()));
-	    }
 	}
 
 	return parsingRet;
@@ -98,26 +85,5 @@ int ResponseBase::getResponseStatusCode()
 {
 	return m_response.status_code;
 }
-
-int ResponseBase::getResultCode()
-{
-	return m_root[vHeader].get(vResultCode,0).asInt();
-}
-
-std::string ResponseBase::getResultMessage()
-{
-	return m_root[vHeader].get(vResultMessage,"").asString();
-}
-
-
-/*
-void ResponseBase::setResponse(const cpr::Response& r)
-{
-    log_info("Response Code: %d", r.status_code);
-    log_info("Response: %s", r.text.c_str());
-
-    m_response = r;
-}
-*/
 
 } /* namespace rest */ //end of rest

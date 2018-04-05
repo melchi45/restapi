@@ -79,7 +79,7 @@ int Thread::start()
 {
 	assert(m_running == false);
 
-	log_info("start Thread::start");
+	log_debug("start Thread::start");
 	int err;
 	m_running = true;
 
@@ -99,7 +99,7 @@ int Thread::stop() // Note 2
 {
 	assert(m_running == true);
 
-	log_info("start Thread::stop");
+	log_debug("start Thread::stop");
 	int err;
 	m_running = false;
 	m_stoprequested = true;
@@ -184,14 +184,14 @@ int Thread::set_pthread_attr()
 		log_error("can't pthread_attr_setinheritsched :[%s]", strerror(err));
 		return -1;
 	}
-
+#if (!(defined(_WIN32) || defined(_WIN64)))
 	sched_policy = SCHED_RR;
 	err = pthread_attr_setschedpolicy(&m_thread_attr, sched_policy);
 	if (err != 0) {
 		log_error("can't pthread_attr_setschedpolicy :[%s]", strerror(err));
 		return -1;
 	}
-
+#endif
 	sched_param.sched_priority = 10;
 	err = pthread_attr_setschedparam(&m_thread_attr, &sched_param);
 	if (err != 0) {

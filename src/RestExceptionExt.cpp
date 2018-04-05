@@ -32,6 +32,7 @@
 *  $HeadURL:
 *******************************************************************************/
 #include "RestExceptionExt.h"
+#include "log_utils.h"
 
 namespace rest {
 
@@ -41,7 +42,7 @@ RestExceptionExt::RestExceptionExt(int status_code, int resultCode, std::string 
 , m_resultMessage(resultMessage)
 {
 	// TODO Auto-generated constructor stub
-
+	log_error("http result code: %d, return code: %d, error message: %s", status_code, resultCode, resultMessage.c_str());
 }
 
 RestExceptionExt::~RestExceptionExt() {
