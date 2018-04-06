@@ -58,8 +58,11 @@ protected:
     cpr::Header m_header;
     std::string m_base_url;
 
+private:
+	int16_t request_count;
+
 protected:
-    virtual void* run(void) = 0;
+    virtual void* run(void);
 
 public:
     int setAuthorizationToken(std::string token);
@@ -67,6 +70,7 @@ public:
     void setHeader(cpr::Header header) { m_header = header; }
     void setBaseURL(std::string base_url) { m_base_url = base_url; }
     void setUri(std::string uri);
+	int16_t getRequestCount() { return request_count; }
     virtual int send() throw (RestException, RestExceptionExt);
 };
 

@@ -36,13 +36,12 @@
 
 namespace rest {
 
-RestExceptionExt::RestExceptionExt(int status_code, int resultCode, std::string resultMessage)
-: RestException(status_code)
-, m_resultCode(resultCode)
+RestExceptionExt::RestExceptionExt(int resultCode, std::string resultMessage)
+: m_resultCode(resultCode)
 , m_resultMessage(resultMessage)
 {
 	// TODO Auto-generated constructor stub
-	log_error("http result code: %d, return code: %d, error message: %s", status_code, resultCode, resultMessage.c_str());
+	log_error("http result code: %d, return code: %d, error message: %s", resultCode, resultMessage.c_str());
 }
 
 RestExceptionExt::~RestExceptionExt() {

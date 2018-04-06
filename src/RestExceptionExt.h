@@ -41,9 +41,9 @@ namespace rest {
 /*
  *
  */
-class RestExceptionExt : public RestException {
+class RestExceptionExt {
 public:
-	RestExceptionExt(int status_code, int resultCode, std::string resultMessage);
+	RestExceptionExt(int resultCode, std::string resultMessage);
 	virtual ~RestExceptionExt();
 
 protected:
@@ -57,7 +57,7 @@ public:
 	virtual const char* what() const throw()
 	{
 		std::ostringstream stringStream;
-		stringStream << "\nStatus Code: " << m_StatusCode << ",\nResult Code: " << m_resultCode << "\nResult Message: " << m_resultMessage;
+		stringStream << ",\nResult Code: " << m_resultCode << "\nResult Message: " << m_resultMessage;
 		std::string copyOfStr = stringStream.str();
 
 		return copyOfStr.c_str();

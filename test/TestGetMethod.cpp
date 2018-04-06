@@ -72,8 +72,7 @@ bool TestGetMethod::setResponse(const cpr::Response& res) throw (RestException, 
     }
 
 	if (m_root.get(vContent, "UTF-8").asString().c_str() != NULL)
-		throw (RestExceptionExt(getResponseStatusCode(), -1, std::string("Error Message")));
-
+		throw (RestExceptionExt(ErrorType::JSON_PARSING_ERROR, std::string("Error Message")));
 
     return parsingRet;
 }

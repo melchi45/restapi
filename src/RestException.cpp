@@ -32,13 +32,14 @@
 *  $HeadURL:
 *******************************************************************************/
 #include "RestException.h"
+#include "log_utils.h"
 
 namespace rest {
 
 RestException::RestException(int status_code)
 : m_StatusCode(status_code)
 {
-	// TODO Auto-generated constructor stub
+	log_error("Failed to request code: %d", status_code);
 }
 
 RestException::~RestException() {

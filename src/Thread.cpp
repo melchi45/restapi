@@ -121,6 +121,11 @@ bool Thread::is_running()
 	return m_running;
 }
 
+bool Thread::is_stoprequest()
+{
+	return m_stoprequested;
+}
+
 // This is the static class function that serves as a C style function pointer
 // for the pthread_create call
 void* Thread::start_thread(void *obj)

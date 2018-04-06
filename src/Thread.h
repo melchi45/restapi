@@ -47,6 +47,7 @@ public:
     int start();
     int stop(); // Note 2
     bool is_running();
+	bool is_stoprequest();
 private:
     volatile bool m_stoprequested; // Note 5
     volatile bool m_running;

@@ -44,10 +44,10 @@
 #endif
 
 namespace rest {
-
 RestBase::RestBase(cpr::Url url, cpr::Header header)
 : m_url(url)
 , m_header(header)
+, request_count(0)
 //, m_status_code(0)
 {
 	// TODO Auto-generated constructor stub
@@ -94,17 +94,26 @@ int RestBase::send() throw (RestException, RestExceptionExt)
 #if (!(defined(_WIN32) || !defined(_WIN64)))
 		usleep(1000);
 #else
-		Sleep(1000);
+//		Sleep(2000);
 #endif
-
+#if 0
 		if (this->is_running()) {
 			if (stop() < 0) {
 				log_error("fail to stop RestBase::send");
 			}
 		}
+#endif
 	}
 
 	return 0;
+}
+
+void* RestBase::run(void)
+{
+	log_debug("request count: %d", request_count);
+	request_count++;
+
+	return NULL;
 }
 
 } /* namespace rest */ //end of rest

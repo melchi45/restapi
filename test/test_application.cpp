@@ -16,8 +16,19 @@ int main(int argc, char* argv[])
 	rest::TestGetMethod get_method;
 	get_method.send();
 	//std::cout << "Content: " << std::string(get_method.getContent()) << ", Title: " << std::string(get_method.getTitle()) << std::endl;
-	log_info("%s", get_method.getContent());
-	log_info("%s", get_method.getTitle());
+
+//	log_info("%s", get_method.getContent());
+//	log_info("%s", get_method.getTitle());
+#if 0
+	do {
+		
+	} while (get_method.getResponseStatusCode() != rest::StatusCode::OK);
+#endif
+
+	while(1) {
+		//if (get_method.getResponseStatusCode() == rest::StatusCode::OK)
+		//	break;
+	}
 
 
 	return 0;
